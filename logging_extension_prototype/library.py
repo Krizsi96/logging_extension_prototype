@@ -1,3 +1,6 @@
+"""
+This scripts represents a library that uses logging to show information.
+"""
 import logging
 import time
 
