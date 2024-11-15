@@ -1,0 +1,1 @@
+This repo contains a small prototype to figure out the best way to extend the default logging handlers in Python
