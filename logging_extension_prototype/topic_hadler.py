@@ -9,8 +9,6 @@ class TopicLogger:
         self.stream = None
 
     def write(self, data: dict):
-        self.logger.debug(f"{self.name} topic:\n{data}")
-
         for handler in self.logger.handlers:
             if isinstance(handler, SpecialFileHandler):
                 self.stream = handler.stream
