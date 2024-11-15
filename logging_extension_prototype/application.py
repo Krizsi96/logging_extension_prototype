@@ -14,23 +14,18 @@ from logging_extension_prototype.special_handler import SpecialFileHandler
 
 import typer
 
-# Get a logger instance for the application and attach a StreamHandler instance to it
 logger = getLogger(__name__)
-logger.addHandler(logging.StreamHandler())
-logger.setLevel(logging.DEBUG)
-
-# Attach a StreamHandler instance to the libraries logger
-library_logger.addHandler(logging.StreamHandler())
-library_logger.setLevel(logging.INFO)
 
 def main():
     logger.info("Hello from logging-extension-prototype!")
 
     for i in range(10):
+        logger.debug(f"iteration: {i}")
         time_keeper()
         data_monitor()
 
 def cli(log_file: Annotated[Path, typer.Option()] = None):
+    configure_console_logging()
     if log_file:
         configure_file_logging(log_file)
 
@@ -40,8 +35,20 @@ def configure_file_logging(log_file):
     # Attach a handler to the logger instance that logs to a file with json serialization
     # Note that it is only configured for the application logger and the library logs will
     # be ignored for the file log.
-    logger.addHandler(SpecialFileHandler(log_file))
-    library_logger.addHandler(SpecialFileHandler(log_file))
+    special_file_handler = SpecialFileHandler(log_file)
+    logger.addHandler(special_file_handler)
+    library_logger.addHandler(special_file_handler)
+
+def configure_console_logging():
+    application_console_logging = logging.StreamHandler()
+    application_console_logging.setLevel(logging.DEBUG)
+    logger.addHandler(application_console_logging)
+    logger.setLevel(logging.DEBUG)
+
+    library_console_logging = logging.StreamHandler()
+    library_console_logging.setLevel(logging.INFO)
+    library_logger.addHandler(library_console_logging)
+    library_logger.setLevel(logging.DEBUG)
 
 if __name__ == "__main__":
     typer.run(cli)
