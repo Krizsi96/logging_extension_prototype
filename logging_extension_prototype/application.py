@@ -7,7 +7,7 @@ from logging import getLogger
 from pathlib import Path
 from typing import Annotated
 
-from logging_extension_prototype.library import time_keeper
+from logging_extension_prototype.library import time_keeper, data_monitor
 from logging_extension_prototype.library import logger as library_logger
 
 from logging_extension_prototype.special_handler import SpecialFileHandler
@@ -21,13 +21,14 @@ logger.setLevel(logging.DEBUG)
 
 # Attach a StreamHandler instance to the libraries logger
 library_logger.addHandler(logging.StreamHandler())
-library_logger.setLevel(logging.DEBUG)
+library_logger.setLevel(logging.INFO)
 
 def main():
     logger.info("Hello from logging-extension-prototype!")
 
     for i in range(10):
         time_keeper()
+        data_monitor()
 
 def cli(log_file: Annotated[Path, typer.Option()] = None):
     if log_file:
@@ -40,6 +41,7 @@ def configure_file_logging(log_file):
     # Note that it is only configured for the application logger and the library logs will
     # be ignored for the file log.
     logger.addHandler(SpecialFileHandler(log_file))
+    library_logger.addHandler(SpecialFileHandler(log_file))
 
 if __name__ == "__main__":
     typer.run(cli)
