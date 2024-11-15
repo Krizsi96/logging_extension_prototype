@@ -33,18 +33,18 @@ def cli(log_file: Annotated[Path, typer.Option()] = None):
 
 def configure_file_logging(log_file):
     # Attach a handler to the logger instance that logs to a file with json serialization
-    # Note that it is only configured for the application logger and the library logs will
-    # be ignored for the file log.
     special_file_handler = SpecialFileHandler(log_file)
     logger.addHandler(special_file_handler)
     library_logger.addHandler(special_file_handler)
 
 def configure_console_logging():
+    # Define the level of logging on console for logs coming from the application
     application_console_logging = logging.StreamHandler()
     application_console_logging.setLevel(logging.DEBUG)
     logger.addHandler(application_console_logging)
     logger.setLevel(logging.DEBUG)
 
+    # Define the level of logging on console for logs coming from the library
     library_console_logging = logging.StreamHandler()
     library_console_logging.setLevel(logging.INFO)
     library_logger.addHandler(library_console_logging)
